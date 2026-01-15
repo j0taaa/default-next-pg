@@ -1,47 +1,31 @@
-### Context
+# Runtime Context
 
-This repository is a **starter/template project** intended to be **forked** whenever I want to create a new service to run in my homelab. Each fork becomes an independent, containerized app that plugs into my existing infrastructure.
+## Where this runs
 
-### Where it runs
+- **Host**: a VPS lab environment with open ports.
+- **Runtime**: everything runs inside containers.
+- **Ingress / routing**: Traefik handles inbound HTTP/S routing for all services.
 
-- **Host**: an **Ubuntu VM** running in the **cloud**
-- **Runtime**: everything runs in **containers** (Docker/Compose)
-- **Ingress / routing**: **Traefik** is the reverse proxy in front of all services
+## Domains & routing
 
-### How services communicate (Traefik + containers)
+- Base domain: **jaypussy.site** (wildcard DNS is configured).
+- Each app gets its own subdomain: `appname.jaypussy.site`.
+- Development uses the shared subdomain: **dev.jaypussy.site**.
+- The dev container listens on **port 3000** and is exposed through **Traefik**.
 
-All projects spawned from this template are expected to:
+## Compose files
 
-- Run as one (or more) containers on the same Docker network as **Traefik**
-- Expose HTTP internally (container-to-container)
-- Be routed externally through **Traefik** via labels (host rules, TLS, middlewares, etc.)
-- Avoid hard-coded ports and direct host exposure unless explicitly needed (Traefik should be the public entrypoint)
+This repo should always include two compose files:
 
-In short: **Traefik handles inbound traffic and service discovery; containers talk over Docker networking**.
+- **compose.yml** — for simple local/testing runs (binds `3000` and `5432`).
+- **lab-compose.yml** — for VPS/lab deployment where the app container connects
+  directly to the Traefik proxy network and is routed via labels.
 
-### What the initial template contains
+These files document the expected container wiring and are part of the operational
+context for the project.
 
-The initial template is a minimal, production-shaped app stack:
+## Deployment expectations
 
-- **Next.js**: a default Next.js application (web UI + server routes)
-- **PostgreSQL**: database container for persistence
-- **Prisma**: ORM + migrations, with the Next.js app connecting to Postgres through `DATABASE_URL`
-
-### What forks are used for
-
-Forked projects created from this template are **not general-purpose apps**. They exist specifically to:
-
-- **Generate images** that will be consumed/used back in the homelab ecosystem (e.g., assets for other services/sites)
-
-So the expected lifecycle is: **deploy fork → generate/export images → those images get referenced elsewhere**.
-
-### Operational expectations / conventions
-
-- **Container-first**: assume the service runs via Compose and is deployable without manual host configuration beyond secrets and Traefik routing.
-- **Config via env vars**: runtime configuration should be done through environment variables (especially database connection strings and app settings).
-- **DB schema via Prisma**: schema changes should be tracked through Prisma migrations.
-- **Ingress via Traefik**: if it needs to be reachable, it should be reachable through Traefik (host-based routing, TLS termination).
-
-### Notes
-
-This file documents the **intended deployment context** so that future forks stay consistent with the homelab setup: **cloud Ubuntu VM + containerized services + Traefik as the communication/routing layer**, starting from a **Next.js + Postgres + Prisma** baseline and focused on **image generation workloads**.
+- Services are container-first and configured via environment variables.
+- Traefik is the public entrypoint; containers talk over Docker networks.
+- Database access is via PostgreSQL and exposed internally to the app.
