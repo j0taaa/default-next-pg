@@ -8,6 +8,7 @@ These rules apply to the entire repository.
 - Base domain: **jaypussy.site** with wildcard DNS; apps use `appname.jaypussy.site`.
 - Development uses **dev.jaypussy.site** and **port 3000** exposed through Traefik.
 - Keep the Traefik labels and Docker networks accurate for this environment.
+- Context details live in **CONTEXT.md**.
 
 ## Compose files (always keep in sync)
 
@@ -32,6 +33,7 @@ Use the existing stack unless explicitly asked to change it:
 ## Testing & linting requirements
 
 - Add or update **Vitest** tests for new features and bug fixes.
+- Keep test coverage aligned with new functionality and fixes.
 - After code changes, always run:
   - `npm run lint`
   - `npm run test`
