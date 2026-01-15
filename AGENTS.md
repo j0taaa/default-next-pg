@@ -166,6 +166,10 @@ npm run build
 
 ---
 
+## When issue is solved
+
+- When an issue is resolved after trying multiple fixes, retain only the change(s) that solved the problem. This rule aims to reduce code bloat and unnecessary modifications.
+
 ## Context
 
 - For informations about the context where this code runs, check CONTEXT.md
