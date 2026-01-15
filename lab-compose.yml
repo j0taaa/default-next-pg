@@ -1,0 +1,49 @@
+services:
+  app:
+    image: ghcr.io/your-org/app:latest
+    container_name: app
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@app-db:5432/app?schema=public
+      - NODE_ENV=production
+      # optional: disable auto schema sync
+      # - SKIP_DB_PUSH=1
+    depends_on:
+      app-db:
+        condition: service_healthy
+    networks:
+      - proxy
+      - app-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`app.${shared__base_domain:-jaypussy.site}`)"
+      - "traefik.http.routers.app.entrypoints=web"
+      - "traefik.http.services.app.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
+
+  app-db:
+    image: postgres:16-alpine
+    container_name: app-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+    volumes:
+      - app-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  app-postgres-data:
+
+networks:
+  proxy:
+    external: true
+  app-network:
+    driver: bridge
