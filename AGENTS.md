@@ -60,6 +60,7 @@ When changing ANY runtime configuration (ports, env vars, services, volumes, net
 - **MUST** edit **BOTH** `compose.yml` AND `lab-compose.yml` simultaneously
 - Verify changes are identical in functionality
 - Only `lab-compose.yml` includes Traefik labels and proxy network
+- `compose.yml` is for a normal setup and `lab-compose.yml` is for the environment setup when running on a VPS lab, which includes Traefik labels and specific configurations. 
 
 **Checklist for compose changes:**
 - [ ] `compose.yml` updated
