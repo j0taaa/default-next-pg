@@ -52,6 +52,10 @@ describe('UserRegistration', () => {
 // Bad: No tests or incomplete tests
 ```
 
+### Connection testing
+
+- If possible in the environment, make requests to the website URL and its API routes to test and see if they are working properly. This is important. If the environment has the possibility of making requests like that, always do. 
+
 ### 3. Compose Files - **PERFECT SYNC REQUIRED**
 
 **FAILURE TO SYNC = BROKEN DEPLOYMENT**
