@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./db";
 
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL || "http://dev.jaypussy.site",
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
@@ -17,4 +18,9 @@ export const auth = betterAuth({
       maxAge: 5 * 60, // 5 minutes
     },
   },
+  trustedOrigins: [
+    "http://dev.jaypussy.site",
+    "https://dev.jaypussy.site",
+    "http://localhost:3000",
+  ],
 });
